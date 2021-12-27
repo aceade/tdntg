@@ -59,3 +59,18 @@ Most of the prototype will be a deathmatch - destroy all ships to win. However, 
 - Current status (complete/incomplete)
 - Category (survive for X minutes, destroy X ships, destroy ALL ships, X ships must reach position A/B/C)
 - Parameters (based on the Category)
+
+### User Interface
+The game plays from a top-down view of a map with ships models positioned across the screen. The player's models will be represented by red ships, and the enemy by yellow. Ships whose position is not immediately known will be dimmed.
+Clicking on a player-controlled ship will allow the player to issue orders to that ship.
+
+### Enemy AI
+In the initial stage, the enemy ships will be stationary while attacking. Their criteria for choosing a target will be as follows:
+- Range
+- Threat to self
+- Is it presenting a broadside? (especially for Battleships/Battlecruisers)
+- Is it targeting me?
+- Can I damage it?
+
+### Friendly AI
+Player-controlled ships will eventually have some autonomy, but will be overridden by the player.
