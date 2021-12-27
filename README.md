@@ -2,7 +2,7 @@
 This is the prototype for a 2D naval tactics game set vaguely in the 1890s-1900s period.
 
 ## Required systems/components
-Initial thoughts, may not be up to date
+These are initial thoughts and may not be up to date.
 
 ### Ship
 The base unit of the game. Has the following attributes:
@@ -52,6 +52,14 @@ Weapons have the following attributes:
 - Ammo type (HE, AP)
 - Dispersion
 
+#### Ship systems
+Rudders, engines, weapons, magazines.
+Have maximum health and effect upon being disabled:
+- Rudders lose some steering
+- Engines lose some max speed and acceleration
+- Weapons never come back online
+- Blow up in spectactular fashion
+
 ### Objective System
 Most of the prototype will be a deathmatch - destroy all ships to win. However, there may be scope to expand this for future work. As such, each objective will have the following attributes:
 
@@ -73,4 +81,34 @@ In the initial stage, the enemy ships will be stationary while attacking. Their 
 - Can I damage it?
 
 ### Friendly AI
-Player-controlled ships will eventually have some autonomy, but will be overridden by the player.
+Player-controlled ships will eventually have some autonomy, but can be overridden by the player.
+This AI will initially handle collision avoidance, which can later be shared with moving enemies.
+
+**Collision avoidance criteria:
+Larger and faster ships have right-of-way over smaller ones
+
+
+### Sound design
+TBD
+
+### Graphics
+Minimalistic graphics
+
+## Deployment
+WebGL for prototype. If this expands to a larger piece, a standalone Windows/Linux/MacOS build may be made available.
+
+## Schedule
+
+**First release
+- Interface
+- Player-controlled ships: movement, attacking
+	- Collision avoidance
+	- Attacking requires player control for now
+- Initial objective: destroy ALL enemies
+
+**Second release
+Enemy ships shoot back:
+	- Target selection
+	
+**Third release
+Enemy ships move
