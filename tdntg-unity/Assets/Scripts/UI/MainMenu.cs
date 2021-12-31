@@ -10,4 +10,12 @@ public class MainMenu : MonoBehaviour
     public void StartTheGame() {
         SceneManager.LoadScene("Main");
     }
+
+    public void ShowOptionsPanel() {
+        throw new System.NotImplementedException("Options will be added later");
+    }
+
+    public void ShowLevelsMenu() {
+        throw new System.NotImplementedException("Only one level for now");
+    }
 }
