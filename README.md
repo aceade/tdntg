@@ -99,16 +99,16 @@ WebGL for prototype. If this expands to a larger piece, a standalone Windows/Lin
 
 ## Schedule
 
-**First release
+**First release**
 - Interface
 - Player-controlled ships: movement, attacking
 	- Collision avoidance
 	- Attacking requires player control for now
 - Initial objective: destroy ALL enemies
 
-**Second release
+**Second release**
 Enemy ships shoot back:
 	- Target selection
 	
-**Third release
+**Third release**
 Enemy ships move

@@ -10,6 +10,7 @@ public class UiManager : MonoBehaviour
     void Start()
     {
         gameStateManager = GetComponent<GameStateManager>();
+        HidePanel(pauseCanvas);
     }
 
    public void Pause() {
