@@ -92,11 +92,21 @@ public class Ship : MonoBehaviour, IDamage
         setTurningSpeed(speed);
     }
 
+    public void setTargetVector(Vector3 displacement) {
+        float angle = Vector3.Angle(displacement, myTransform.forward);
+        if (Vector3.Dot(displacement, myTransform.right) < 0f) {
+            angle *= -1f;
+        }
+        Debug.LogFormat("Ship at {0} must displace by {1}. This gives an angle of {2}", getPosition(), displacement, angle);
+        setTargetBearing(angle);
+        setTargetSpeed(targetSpeed);
+    }
+
     public Vector3 getPosition() {
         return myTransform.position;
     }
 
-    public void setTurningSpeed(float speed) {
+    private void setTurningSpeed(float speed) {
         turningSpeed = Mathf.Clamp(speed, -maxTurningSpeed, maxTurningSpeed);
     }
 }

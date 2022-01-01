@@ -29,12 +29,7 @@ public class TestShip : MonoBehaviour
 
         Vector3 displacement = waypoints[waypointIndex].getPosition() - ship.getPosition();
         displacement.y = 0;
-        float angle = Vector3.Angle(displacement, ship.transform.forward);
-        if (Vector3.Dot(displacement, ship.transform.right) < 0f) {
-            angle *= -1f;
-        }
-        Debug.LogFormat("Ship at {0} must displace by {1}. This gives an angle of {2}", ship.getPosition(), displacement, angle);
-        ship.setTargetBearing(angle);
+        ship.setTargetVector(displacement);
         ship.setTargetSpeed(targetSpeed);
     }
 
