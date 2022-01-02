@@ -10,8 +10,8 @@ public class TestWaypoint : MonoBehaviour
 
     // Update is called once per frame
     void OnTriggerEnter(Collider other) {
-        Debug.LogFormat("{0} entered me", other);
-        if (other.transform.root == testShip.transform) {
+        if (!other.isTrigger && other.transform.root == testShip.transform) {
+            Debug.LogFormat("{0} entered me", other);
             testShip.IncrementIndex(targetSpeed);
         }
     }

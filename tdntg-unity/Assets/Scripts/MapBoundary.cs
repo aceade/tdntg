@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,8 @@ public class MapBoundary : MonoBehaviour
 {
     private Vector3 mapCentre;
     
+    private HashSet<Ship> outsideShips = new HashSet<Ship>();
+
     void Start() {
         mapCentre = transform.position;
     }
@@ -14,6 +17,7 @@ public class MapBoundary : MonoBehaviour
     void OnTriggerExit(Collider other) {
         Ship ship = other.GetComponent<Ship>();
         if (ship != null) {
+            outsideShips.Add(ship);
             Debug.LogFormat("{0} should return towards the map!", ship);
             Vector3 displacement = mapCentre - ship.getPosition();
             displacement.y = 0;
@@ -24,8 +28,10 @@ public class MapBoundary : MonoBehaviour
 
     void OnTriggerEnter(Collider coll) {
         Ship ship = coll.GetComponent<Ship>();
-        if (ship != null) {
+        if (ship != null && outsideShips.Contains(ship)) {
+            Debug.LogFormat("{0} has entered the map boundary", coll);
             ship.setTargetSpeed(2f);
+            outsideShips.Remove(ship);
         }
     }
 }

@@ -35,7 +35,8 @@ public class Ship : MonoBehaviour, IDamage
     void Start()
     {
         myTransform = transform;
-        currentHitPoints = maxHitpoints;   
+        currentHitPoints = maxHitpoints;  
+        currentSpeed = 0f; 
     }
 
     // Update is called once per frame
