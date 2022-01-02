@@ -110,4 +110,8 @@ public class Ship : MonoBehaviour, IDamage
     private void setTurningSpeed(float speed) {
         turningSpeed = Mathf.Clamp(speed, -maxTurningSpeed, maxTurningSpeed);
     }
+
+    public void shipSpotted(Ship ship) {
+
+    }
 }
