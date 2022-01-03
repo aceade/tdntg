@@ -31,6 +31,11 @@ public class Ship : MonoBehaviour, IDamage
 
     private Transform myTransform;
 
+    [Tooltip("Temporary field for testing")]
+    public bool isMockFiring;
+
+    private Faction command;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -111,7 +116,23 @@ public class Ship : MonoBehaviour, IDamage
         turningSpeed = Mathf.Clamp(speed, -maxTurningSpeed, maxTurningSpeed);
     }
 
-    public void shipSpotted(Ship ship) {
+    public bool isFiring() {
+        return isMockFiring;
+    }
 
+    public void setCommander(Faction faction) {
+        this.command = faction;
+    }
+
+    public void shipSpotted(Ship ship) {
+        command.ShipSpotted(ship);
+    }
+
+    public void ShipVisuallyLost(Ship ship) {
+        command.ShipDetectionLost(ship);
+    }
+
+    public void toggleRendering(bool show) {
+        GetComponent<Renderer>().enabled = show;
     }
 }

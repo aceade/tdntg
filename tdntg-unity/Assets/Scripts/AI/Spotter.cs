@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Spotter : MonoBehaviour
@@ -7,6 +8,10 @@ public class Spotter : MonoBehaviour
     public float speedWeighting = 0.2f;
     public float heightWeighting = 0.2f;
     public float attackWeighting = 0.6f;
+
+    private Dictionary<Ship, bool> knownEnemyShips = new Dictionary<Ship, bool>();
+
+    public float scanRate = 0.2f;
 
     // Start is called before the first frame update
     void Start()
@@ -22,26 +27,63 @@ public class Spotter : MonoBehaviour
             float distance = Vector3.Distance(otherShip.getPosition(), ship.getPosition());
             Debug.LogFormat("{0} entered detection for {1} at a distance of {2}", coll, ship, distance);
 
-            
             bool detected = isDetected(otherShip, distance);
+            if (!knownEnemyShips.ContainsKey(otherShip)) {
+                knownEnemyShips.Add(otherShip, detected);
+                if (knownEnemyShips.Count == 1) {
+                    InvokeRepeating("scanKnownShips", 0f, scanRate);
+                }
+            }
             if (detected) {
                 ship.shipSpotted(otherShip);
             }
         }
     }
 
+    private void scanKnownShips() {
+        foreach (KeyValuePair<Ship, bool> pair in knownEnemyShips) {
+            var otherShip = pair.Key;
+            var previousValue = pair.Value;
+            float distance = Vector3.Distance(otherShip.getPosition(), ship.getPosition());
+            bool detected = isDetected(otherShip, distance);
+            Debug.LogFormat("Scanned {0} at distance of {1}. Visible? {2}", otherShip, distance, detected);
+            if (detected && !previousValue) {
+                Debug.LogFormat("We can actually see {0}", otherShip);
+                knownEnemyShips[otherShip] = true;
+                ship.shipSpotted(otherShip);
+            } else if (!detected && previousValue) {
+                Debug.LogFormat("We just lost sight of {0}", otherShip);
+                knownEnemyShips[otherShip] = false;
+                ship.ShipVisuallyLost(otherShip);
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider coll) {
+        var otherShip = coll.GetComponent<Ship>();
+        if (otherShip != null) {
+            knownEnemyShips.Remove(otherShip);
+            if (knownEnemyShips.Count == 0) {
+                CancelInvoke("scanKnownShips");
+            }
+        }   
+    }
+
     private bool isDetected(Ship ship, float distance) {
         float minDistance = ship.minDetectionRadius;
         float maxDistance = ship.maxDetectionRadius;
 
-        // if they're too close, no hiding!
         if (distance < maxDistance) {
 
+            // if they're too close, no hiding!
             if (distance <= minDistance) {
                 return true;
             } else {
-                // this will be proportional to their speed, height and whether they are firing cannons
-                // torpedos can be stealthy
+                // this will eventually be proportional to their speed, height and whether they are firing cannons
+                // torpedoes can be stealthy
+                if (ship.isFiring()) {
+                    return true;
+                }
             }
         }
 
