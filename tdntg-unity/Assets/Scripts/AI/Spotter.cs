@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Spotter : MonoBehaviour
@@ -41,12 +42,13 @@ public class Spotter : MonoBehaviour
     }
 
     private void scanKnownShips() {
-        foreach (KeyValuePair<Ship, bool> pair in knownEnemyShips) {
-            var otherShip = pair.Key;
-            var previousValue = pair.Value;
+
+        for (int i = 0; i < knownEnemyShips.Count; i++) {
+
+            var otherShip = knownEnemyShips.Keys.ToList()[i];
+            var previousValue = knownEnemyShips[otherShip];
             float distance = Vector3.Distance(otherShip.getPosition(), ship.getPosition());
             bool detected = isDetected(otherShip, distance);
-            Debug.LogFormat("Scanned {0} at distance of {1}. Visible? {2}", otherShip, distance, detected);
             if (detected && !previousValue) {
                 Debug.LogFormat("We can actually see {0}", otherShip);
                 knownEnemyShips[otherShip] = true;

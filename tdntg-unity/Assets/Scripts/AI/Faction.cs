@@ -7,6 +7,8 @@ public class Faction : MonoBehaviour
 
     protected bool visibleAtStart = false;
 
+    public string factionName;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -18,10 +20,12 @@ public class Faction : MonoBehaviour
 
     public virtual void ShipSpotted(Ship enemyShip) {
         // no-op by default
+        Debug.LogFormat("{0} spotted enemy ship {1}!", factionName, enemyShip);
     }
 
     public virtual void ShipDetectionLost(Ship enemyShip) {
         // no-op for dummy
+        Debug.LogFormat("{0} lost sight of enemy ship {1}!", factionName, enemyShip);
     }
 
     public void alliedShipDestroyed(Ship alliedShip) {
