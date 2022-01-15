@@ -37,12 +37,16 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
 
     private Faction command;
 
+    private Material defaultMaterial;
+    public Material selectedMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
         myTransform = transform;
         currentHitPoints = maxHitpoints;  
         currentSpeed = 0f;
+        defaultMaterial = GetComponent<Renderer>().material;
     }
 
     // Update is called once per frame
@@ -151,5 +155,12 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData) {
         Debug.LogFormat("I haz been clicked. EventData: {0}", eventData);
         command.shipSelected(this);
+        GetComponent<Renderer>().material = selectedMaterial;
     }
+
+    public void Deselect() {
+        GetComponent<Renderer>().material = defaultMaterial;
+    }
+
+
 }

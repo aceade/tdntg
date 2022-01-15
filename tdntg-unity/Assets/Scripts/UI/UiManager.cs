@@ -13,6 +13,8 @@ public class UiManager : MonoBehaviour
 
     private Slider engineSlider, rudderSlider;
 
+    private Ship lastSelectedShip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,35 +26,39 @@ public class UiManager : MonoBehaviour
         HidePanel(pauseCanvas);
     }
 
-   public void Pause() {
-       gameStateManager.Pause();
-       ShowPanel(pauseCanvas);
-   }
+    public void Pause() {
+        gameStateManager.Pause();
+        ShowPanel(pauseCanvas);
+    }
 
-   public void Resume() {
-       gameStateManager.Resume();
-       HidePanel(pauseCanvas);
-   }
+    public void Resume() {
+        gameStateManager.Resume();
+        HidePanel(pauseCanvas);
+    }
 
-   public void RestartLevel() {
-       gameStateManager.Restart();
-   }
+    public void RestartLevel() {
+        gameStateManager.Restart();
+    }
 
-   public void Exit() {
-       gameStateManager.Exit();
-   }
+    public void Exit() {
+        gameStateManager.Exit();
+    }
 
-   private void HidePanel(Canvas canvas) {
-       canvas.gameObject.SetActive(false);
-   }
+    private void HidePanel(Canvas canvas) {
+        canvas.gameObject.SetActive(false);
+    }
 
-   private void ShowPanel(Canvas canvas) {
-       canvas.gameObject.SetActive(true);
-   }
+    private void ShowPanel(Canvas canvas) {
+        canvas.gameObject.SetActive(true);
+    }
 
-   public void showShipDetails(Ship ship) {
+    public void showShipDetails(Ship ship) {
+        lastSelectedShip = ship;
         shipDetailsText.text = ship.name;
         shipAttributesDisplay.text = string.Format("Health: {0}\nSpeed: {1}", ship.getHitPoints(), ship.getCurrentSpeed());
+
+        rudderSlider.enabled = true;
+        engineSlider.enabled = true;
 
         engineSlider.minValue = ship.maxReverseSpeed;
         engineSlider.maxValue = ship.maxSpeed;
@@ -70,6 +76,20 @@ public class UiManager : MonoBehaviour
             ship.setTurningSpeed(rudderSlider.value);
         });
         
+   }
+
+    /// <summary>
+    /// Attached to an EventTrigger on the map background
+    /// </summary>
+   public void DeselectShip() {
+        if (lastSelectedShip != null) {
+            lastSelectedShip.Deselect();
+            lastSelectedShip = null;
+            shipAttributesDisplay.text = "";
+            shipDetailsText.text = "";
+            rudderSlider.enabled = false;
+            engineSlider.enabled = false;
+        }   
    }
 
 }
