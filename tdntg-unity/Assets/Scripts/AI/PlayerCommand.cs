@@ -1,3 +1,4 @@
+using UnityEngine;
 
 public class PlayerCommand : Faction
 {
@@ -15,5 +16,10 @@ public class PlayerCommand : Faction
 
     public override void ShipDetectionLost(Ship enemyShip) {
         enemyShip.toggleRendering(false);
+    }
+
+    public override void shipSelected(Ship ship) {
+        Debug.LogFormat("Ship {0} selected", ship);
+        uiManager.showShipDetails(ship);
     }
 }

@@ -35,4 +35,8 @@ public class Faction : MonoBehaviour
     public void enemyShipDestroyed(Ship enemyShip) {
         // TODO
     }
+
+    public virtual void shipSelected(Ship ship) {
+        // no-op for dummy
+    }
 }

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 
-public class Ship : MonoBehaviour, IDamage
+public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
 {
     public int maxHitpoints;
     public float maxSpeed;
@@ -41,7 +42,7 @@ public class Ship : MonoBehaviour, IDamage
     {
         myTransform = transform;
         currentHitPoints = maxHitpoints;  
-        currentSpeed = 0f; 
+        currentSpeed = 0f;
     }
 
     // Update is called once per frame
@@ -78,6 +79,14 @@ public class Ship : MonoBehaviour, IDamage
         return currentHitPoints;
     }
 
+    public float getCurrentSpeed() {
+        return Mathf.RoundToInt(currentSpeed * 10) / 10f;
+    }
+
+    public float getCurrentRudder() {
+        return Mathf.RoundToInt(turningSpeed * 10) / 10f;
+    }
+
     public void setTargetSpeed(float speed) {
         targetSpeed = Mathf.Clamp(speed, maxReverseSpeed, maxSpeed);
         if (targetSpeed < currentSpeed) {
@@ -85,7 +94,6 @@ public class Ship : MonoBehaviour, IDamage
         } else if (targetSpeed > currentSpeed) {
             moveType = MoveType.accelerating;
         }
-        Debug.LogFormat("Target speed is {0}. We will be {1}", targetSpeed, moveType);
     }
 
     /// <summary>
@@ -112,7 +120,7 @@ public class Ship : MonoBehaviour, IDamage
         return myTransform.position;
     }
 
-    private void setTurningSpeed(float speed) {
+    public void setTurningSpeed(float speed) {
         turningSpeed = Mathf.Clamp(speed, -maxTurningSpeed, maxTurningSpeed);
     }
 
@@ -134,5 +142,14 @@ public class Ship : MonoBehaviour, IDamage
 
     public void toggleRendering(bool show) {
         GetComponent<Renderer>().enabled = show;
+    }
+
+    /// <summary>
+    /// Implement an on-click method for this, using Unity's EventSystem.
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerClick(PointerEventData eventData) {
+        Debug.LogFormat("I haz been clicked. EventData: {0}", eventData);
+        command.shipSelected(this);
     }
 }
