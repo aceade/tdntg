@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,9 @@ public class UiManager : MonoBehaviour
     private Slider engineSlider, rudderSlider;
 
     private Ship lastSelectedShip;
+
+    private WaitForSeconds shipUpdateCycle = new WaitForSeconds(0.1f);
+    private bool trackingShip;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +56,14 @@ public class UiManager : MonoBehaviour
         canvas.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Display details of the specified ship, passed via the ship's command structure.
+    /// Only called from player-controlled factions.
+    /// </summary>
+    /// <param name="ship"></param>
     public void showShipDetails(Ship ship) {
+        DeselectShip();
+
         lastSelectedShip = ship;
         shipDetailsText.text = ship.name;
         shipAttributesDisplay.text = string.Format("Health: {0}\nSpeed: {1}", ship.getHitPoints(), ship.getCurrentSpeed());
@@ -63,19 +74,15 @@ public class UiManager : MonoBehaviour
         engineSlider.minValue = ship.maxReverseSpeed;
         engineSlider.maxValue = ship.maxSpeed;
         engineSlider.value = ship.getCurrentSpeed();
-        engineSlider.onValueChanged.RemoveAllListeners();
-        engineSlider.onValueChanged.AddListener(delegate {
-            ship.setTargetSpeed(engineSlider.value);
-        });
 
         rudderSlider.minValue = -ship.maxTurningSpeed;
         rudderSlider.maxValue = ship.maxTurningSpeed;
         rudderSlider.value = ship.getCurrentRudder();
-        rudderSlider.onValueChanged.RemoveAllListeners();
-        rudderSlider.onValueChanged.AddListener(delegate {
-            ship.setTurningSpeed(rudderSlider.value);
-        });
-        
+
+        if (!trackingShip) {
+            trackingShip = true;
+            StartCoroutine(trackShipDetails());
+        }
    }
 
     /// <summary>
@@ -89,7 +96,22 @@ public class UiManager : MonoBehaviour
             shipDetailsText.text = "";
             rudderSlider.enabled = false;
             engineSlider.enabled = false;
+            trackingShip = false;
         }   
+   }
+
+    /// <summary>
+    /// Track the ship and update it's rudder/engine
+    /// </summary>
+    /// <returns></returns>
+   private IEnumerator trackShipDetails() {
+       while (trackingShip) {
+            shipAttributesDisplay.text = string.Format("Health: {0}\nSpeed: {1}", 
+                lastSelectedShip.getHitPoints(), lastSelectedShip.getCurrentSpeed());
+            lastSelectedShip.setTurningSpeed(rudderSlider.value);
+            lastSelectedShip.setTargetSpeed(engineSlider.value);
+            yield return shipUpdateCycle;
+       }
    }
 
 }
