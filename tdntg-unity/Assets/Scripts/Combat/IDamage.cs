@@ -4,7 +4,9 @@ using UnityEngine;
 
 public interface IDamage
 {
-    void damage(DamageType damageType, int damageAmount);
+    void InflictDamage(DamageType damageType, int damageAmount);
 
-    int getHitPoints();
+    int GetHitPoints();
+
+    Transform GetTransform();
 }
