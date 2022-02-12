@@ -45,7 +45,7 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         myTransform = transform;
         currentHitPoints = maxHitpoints;  
         currentSpeed = 0f;
-        defaultMaterial = GetComponent<Renderer>().material;
+        defaultMaterial = GetComponentInChildren<Renderer>().material;
         weapons = new List<Weapon>(GetComponentsInChildren<Weapon>());
     }
 
@@ -156,7 +156,7 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
     }
 
     public void toggleRendering(bool show) {
-        GetComponent<Renderer>().enabled = show;
+        GetComponentInChildren<Renderer>().enabled = show;
     }
 
     /// <summary>
@@ -166,11 +166,11 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData) {
         Debug.LogFormat("I haz been clicked. EventData: {0}", eventData);
         command.shipSelected(this);
-        GetComponent<Renderer>().material = selectedMaterial;
+        GetComponentInChildren<Renderer>().material = selectedMaterial;
     }
 
     public void Deselect() {
-        GetComponent<Renderer>().material = defaultMaterial;
+        GetComponentInChildren<Renderer>().material = defaultMaterial;
     }
 
 

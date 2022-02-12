@@ -19,6 +19,8 @@ public class Weapon : MonoBehaviour
 
     // torpedoes will have no dispersion
     public float dispersion = 1f;
+
+    public float maxDistance;
     
     // Start is called before the first frame update
     void Start()
@@ -32,14 +34,14 @@ public class Weapon : MonoBehaviour
 
     public void StartTracking(IDamage target) {
         currentTarget = target;
-        InvokeRepeating("TrackCurrentTarget", 0f, 0.1f);
+        InvokeRepeating("TrackCurrentTarget", 0.1f, 0.1f);
         
     }
 
     private void TrackCurrentTarget() {
-        Vector3 targetDir = currentTarget.GetTransform().position = transform.position;
-        myTransform.forward = Vector3.RotateTowards(myTransform.forward, targetDir - myTransform.forward, turningSpeed, 0f);
-        if (Vector3.Angle(myTransform.forward, targetDir) < dispersion) {
+        Vector3 targetDir = currentTarget.GetTransform().position - transform.position;
+        myTransform.forward = Vector3.RotateTowards(myTransform.forward, targetDir, turningSpeed, 0f);
+        if (Vector3.Angle(myTransform.forward, targetDir) < dispersion && targetDir.magnitude < maxDistance) {
             Launch(myTransform.forward);
         }
     }
