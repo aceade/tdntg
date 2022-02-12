@@ -33,7 +33,7 @@ public class Faction : MonoBehaviour
     }
 
     public void enemyShipDestroyed(Ship enemyShip) {
-        // TODO
+        Debug.LogFormat("{0} destroyed enemy ship {1}", factionName, enemyShip);
     }
 
     public virtual void shipSelected(Ship ship) {

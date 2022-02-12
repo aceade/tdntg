@@ -17,6 +17,8 @@ public class Weapon : MonoBehaviour
 
     private IDamage currentTarget;
 
+    private Ship myShip;
+
     // torpedoes will have no dispersion
     public float dispersion = 1f;
 
@@ -32,18 +34,43 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    public void SetShip(Ship ship) {
+        myShip = ship;
+    }
+
     public void StartTracking(IDamage target) {
         currentTarget = target;
-        InvokeRepeating("TrackCurrentTarget", 0.1f, 0.1f);
-        
+        InvokeRepeating("TrackCurrentTarget", 0.1f, 0.05f);
     }
 
     private void TrackCurrentTarget() {
-        Vector3 targetDir = currentTarget.GetTransform().position - transform.position;
+        
+        if (currentTarget.GetHitPoints() < 0) {
+            myShip.TargetDestroyed(currentTarget);
+            // quit for now...but perhaps a twitchy commander could order us to make sure
+            return;
+        }
+
+        Vector3 targetDir = calculateFiringDir();
         myTransform.forward = Vector3.RotateTowards(myTransform.forward, targetDir, turningSpeed, 0f);
         if (Vector3.Angle(myTransform.forward, targetDir) < dispersion && targetDir.magnitude < maxDistance) {
             Launch(myTransform.forward);
         }
+    }
+
+    private Vector3 calculateFiringDir() {
+        Vector3 displacement = currentTarget.GetTransform().position - transform.position;
+        float speed = currentTarget.GetCurrentSpeed();
+        Vector3 targetDir = currentTarget.GetTransform().forward * speed;
+
+        Vector3 firingDir = displacement + targetDir;
+        Debug.DrawLine(muzzle.position, firingDir, Color.red);
+        Debug.DrawLine(muzzle.position, muzzle.forward * 10, Color.yellow);
+        if (acceptableAmmoType == Projectile.Type.TORPEDO) {
+            // torpedos can't fly
+            firingDir.y = 0;
+        }
+        return firingDir;
     }
 
     public void StopTrackingCurrentTarget() {
@@ -55,6 +82,7 @@ public class Weapon : MonoBehaviour
         if (isFiring) {
             return;
         }
+        Debug.LogFormat("Launching {0} from {1} at {2}", acceptableAmmoType, muzzle.position, direction);
         isFiring = true;
         Projectile projectile = ammoPool.GetProjectile();
         projectile.Launch(muzzle.position, direction, muzzleVelocity);

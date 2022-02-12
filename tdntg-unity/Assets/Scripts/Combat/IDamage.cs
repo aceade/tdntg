@@ -8,5 +8,7 @@ public interface IDamage
 
     int GetHitPoints();
 
+    float GetCurrentSpeed();
+
     Transform GetTransform();
 }

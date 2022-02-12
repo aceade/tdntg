@@ -47,6 +47,7 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         currentSpeed = 0f;
         defaultMaterial = GetComponentInChildren<Renderer>().material;
         weapons = new List<Weapon>(GetComponentsInChildren<Weapon>());
+        weapons.ForEach(x => x.SetShip(this));
     }
 
     // Update is called once per frame
@@ -87,7 +88,7 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         return currentHitPoints;
     }
 
-    public float getCurrentSpeed() {
+    public float GetCurrentSpeed() {
         return Mathf.RoundToInt(currentSpeed * 10) / 10f;
     }
 
@@ -155,6 +156,15 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         weapons.ForEach(x => x.StopTrackingCurrentTarget());
     }
 
+    public void TargetDestroyed(IDamage target) {
+        Ship enemyShip = target.GetTransform().root.GetComponent<Ship>();
+        Debug.LogFormat("{0} reporting enemy ship destroyed", this);
+        if (enemyShip != null) {
+            command.enemyShipDestroyed(enemyShip);
+            weapons.ForEach(x => x.StopTrackingCurrentTarget());
+        }
+    }
+
     public void toggleRendering(bool show) {
         GetComponentInChildren<Renderer>().enabled = show;
     }
@@ -164,7 +174,6 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData) {
-        Debug.LogFormat("I haz been clicked. EventData: {0}", eventData);
         command.shipSelected(this);
         GetComponentInChildren<Renderer>().material = selectedMaterial;
     }
