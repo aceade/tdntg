@@ -13,6 +13,8 @@ public class Projectile : MonoBehaviour {
     private Transform myTransform;
     private Rigidbody myBody;
 
+    private AmmoPool ammoPool;
+
     public int damagePoints;
 
     void Start() {
@@ -30,6 +32,10 @@ public class Projectile : MonoBehaviour {
         Invoke("EnableCollisions", 0.1f);
     }
 
+    public void SetPool(AmmoPool pool) {
+        this.ammoPool = pool;
+    }
+
     private void EnableCollisions() {
         GetComponent<Collider>().enabled = true;
     }
@@ -45,6 +51,7 @@ public class Projectile : MonoBehaviour {
             damageScript.InflictDamage(this.damageType, damagePoints);
             myBody.Sleep();
             GetComponent<Collider>().enabled = false;
+            myTransform.position = ammoPool.transform.position;
         }
     }
 }

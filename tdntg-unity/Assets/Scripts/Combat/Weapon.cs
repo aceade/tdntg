@@ -25,7 +25,7 @@ public class Weapon : MonoBehaviour
     public float maxDistance;
     
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         myTransform = transform;
         muzzle = myTransform.GetChild(0);
@@ -58,7 +58,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    private Vector3 calculateFiringDir() {
+    protected virtual Vector3 calculateFiringDir() {
         Vector3 displacement = currentTarget.GetTransform().position - transform.position;
         float speed = currentTarget.GetCurrentSpeed();
         Vector3 targetDir = currentTarget.GetTransform().forward * speed;

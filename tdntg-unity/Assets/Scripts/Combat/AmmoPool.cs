@@ -12,6 +12,7 @@ public class AmmoPool : MonoBehaviour
     void Start()
     {
         projectiles = new List<Projectile>(GetComponentsInChildren<Projectile>());
+        projectiles.ForEach(x => x.SetPool(this));
     }
 
     public Projectile.Type GetAmmoType() {
