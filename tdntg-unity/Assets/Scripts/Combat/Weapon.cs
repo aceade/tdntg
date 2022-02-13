@@ -64,8 +64,8 @@ public class Weapon : MonoBehaviour
         Vector3 targetDir = currentTarget.GetTransform().forward * speed;
 
         Vector3 firingDir = displacement + targetDir;
-        Debug.DrawLine(muzzle.position, firingDir, Color.red);
-        Debug.DrawLine(muzzle.position, muzzle.forward * 10, Color.yellow);
+        Debug.DrawRay(muzzle.position, firingDir, Color.red);
+        Debug.DrawRay(muzzle.position, muzzle.forward * 10, Color.yellow);
         if (acceptableAmmoType == Projectile.Type.TORPEDO) {
             // torpedos can't fly
             firingDir.y = 0;

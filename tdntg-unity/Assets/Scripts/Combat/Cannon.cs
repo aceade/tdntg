@@ -23,6 +23,9 @@ public class Cannon : Weapon
             var angle = (Mathf.Rad2Deg * Mathf.Asin(tmp))/ 2;
             baseDir.y = angle;
         }
+        baseDir.x += dispersion;
+        baseDir.y += dispersion;
+        baseDir.z += dispersion;
         
         return baseDir;
     }

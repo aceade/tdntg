@@ -9,7 +9,7 @@ public class AmmoPool : MonoBehaviour
     private int index = 0;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         projectiles = new List<Projectile>(GetComponentsInChildren<Projectile>());
         projectiles.ForEach(x => x.SetPool(this));

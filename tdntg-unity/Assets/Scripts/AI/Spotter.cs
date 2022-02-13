@@ -46,7 +46,6 @@ public class Spotter : MonoBehaviour
 
             var otherShip = knownEnemyShips.Keys.ToList()[i];
             var previousValue = knownEnemyShips[otherShip];
-            Debug.DrawRay(ship.getPosition(), otherShip.getPosition() - ship.getPosition(), Color.yellow);
             float distance = Vector3.Distance(otherShip.getPosition(), ship.getPosition());
             bool detected = isDetected(otherShip, distance);
             if (detected && !previousValue) {
