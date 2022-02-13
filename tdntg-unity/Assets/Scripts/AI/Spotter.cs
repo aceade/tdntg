@@ -23,10 +23,9 @@ public class Spotter : MonoBehaviour
 
     void OnTriggerEnter(Collider coll) {
         
-        var otherShip = coll.GetComponent<Ship>();
+        var otherShip = coll.transform.root.GetComponent<Ship>();
         if (otherShip != null) {
             float distance = Vector3.Distance(otherShip.getPosition(), ship.getPosition());
-            Debug.LogFormat("{0} entered detection for {1} at a distance of {2}", coll, ship, distance);
 
             bool detected = isDetected(otherShip, distance);
             if (!knownEnemyShips.ContainsKey(otherShip)) {
@@ -62,7 +61,7 @@ public class Spotter : MonoBehaviour
     }
 
     void OnTriggerExit(Collider coll) {
-        var otherShip = coll.GetComponent<Ship>();
+        var otherShip = coll.transform.root.GetComponent<Ship>();
         if (otherShip != null) {
             knownEnemyShips.Remove(otherShip);
             if (knownEnemyShips.Count == 0) {

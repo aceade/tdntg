@@ -32,13 +32,12 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
 
     private Transform myTransform;
 
-    [Tooltip("Temporary field for testing")]
-    public bool isMockFiring;
-
     private Faction command;
 
     private Material defaultMaterial;
     public Material selectedMaterial;
+
+    private List<Weapon> weapons;
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +45,9 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         myTransform = transform;
         currentHitPoints = maxHitpoints;  
         currentSpeed = 0f;
-        defaultMaterial = GetComponent<Renderer>().material;
+        defaultMaterial = GetComponentInChildren<Renderer>().material;
+        weapons = new List<Weapon>(GetComponentsInChildren<Weapon>());
+        weapons.ForEach(x => x.SetShip(this));
     }
 
     // Update is called once per frame
@@ -71,7 +72,11 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         return Mathf.Approximately(bearing, Vector3.Angle(myTransform.forward, Vector3.forward));
     }
 
-    public void damage(DamageType damageType, int attackDamage) {
+    public Transform GetTransform() {
+        return myTransform;
+    }
+
+    public void InflictDamage(DamageType damageType, int attackDamage) {
         // for now, ignore damage type
         currentHitPoints -= attackDamage;
         if (currentHitPoints <= 0) {
@@ -79,11 +84,11 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         }
     }
 
-    public int getHitPoints() {
+    public int GetHitPoints() {
         return currentHitPoints;
     }
 
-    public float getCurrentSpeed() {
+    public float GetCurrentSpeed() {
         return Mathf.RoundToInt(currentSpeed * 10) / 10f;
     }
 
@@ -129,7 +134,12 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
     }
 
     public bool isFiring() {
-        return isMockFiring;
+        for (int i = 0; i < weapons.Count; i++) {
+            if (weapons[i].IsCurrentlyFiring()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setCommander(Faction faction) {
@@ -138,14 +148,25 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
 
     public void shipSpotted(Ship ship) {
         command.ShipSpotted(ship);
+        weapons.ForEach(x => x.StartTracking(ship));
     }
 
     public void ShipVisuallyLost(Ship ship) {
         command.ShipDetectionLost(ship);
+        weapons.ForEach(x => x.StopTrackingCurrentTarget());
+    }
+
+    public void TargetDestroyed(IDamage target) {
+        Ship enemyShip = target.GetTransform().root.GetComponent<Ship>();
+        Debug.LogFormat("{0} reporting enemy ship destroyed", this);
+        if (enemyShip != null) {
+            command.enemyShipDestroyed(enemyShip);
+            weapons.ForEach(x => x.StopTrackingCurrentTarget());
+        }
     }
 
     public void toggleRendering(bool show) {
-        GetComponent<Renderer>().enabled = show;
+        GetComponentInChildren<Renderer>().enabled = show;
     }
 
     /// <summary>
@@ -153,13 +174,12 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData) {
-        Debug.LogFormat("I haz been clicked. EventData: {0}", eventData);
         command.shipSelected(this);
-        GetComponent<Renderer>().material = selectedMaterial;
+        GetComponentInChildren<Renderer>().material = selectedMaterial;
     }
 
     public void Deselect() {
-        GetComponent<Renderer>().material = defaultMaterial;
+        GetComponentInChildren<Renderer>().material = defaultMaterial;
     }
 
 

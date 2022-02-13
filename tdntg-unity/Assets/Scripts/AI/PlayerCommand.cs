@@ -12,6 +12,7 @@ public class PlayerCommand : Faction
 
     public override void ShipSpotted(Ship ship) {
         ship.toggleRendering(true);
+        base.ShipSpotted(ship);
     }
 
     public override void ShipDetectionLost(Ship enemyShip) {

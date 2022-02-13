@@ -11,6 +11,9 @@ public class TestShip : MonoBehaviour
 
     private int waypointIndex = -1;
 
+    [Range(-180, 180)]
+    public float fallbackBearing;
+
     void Start()
     {
         ship = GetComponent<Ship>();   
@@ -18,7 +21,12 @@ public class TestShip : MonoBehaviour
     }
 
     private void initialMove() {
-        IncrementIndex(ship.maxSpeed);
+        if (waypoints.Count > 0) {
+            IncrementIndex(ship.maxSpeed);
+        } else {
+            ship.setTargetBearing(fallbackBearing);
+            ship.setTargetSpeed(1f);
+        }
     }
 
     public void IncrementIndex(float targetSpeed) {

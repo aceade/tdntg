@@ -66,14 +66,14 @@ public class UiManager : MonoBehaviour
 
         lastSelectedShip = ship;
         shipDetailsText.text = ship.name;
-        shipAttributesDisplay.text = string.Format("Health: {0}\nSpeed: {1}", ship.getHitPoints(), ship.getCurrentSpeed());
+        shipAttributesDisplay.text = string.Format("Health: {0}\nSpeed: {1}", ship.GetHitPoints(), ship.GetCurrentSpeed());
 
         rudderSlider.enabled = true;
         engineSlider.enabled = true;
 
         engineSlider.minValue = ship.maxReverseSpeed;
         engineSlider.maxValue = ship.maxSpeed;
-        engineSlider.value = ship.getCurrentSpeed();
+        engineSlider.value = ship.GetCurrentSpeed();
 
         rudderSlider.minValue = -ship.maxTurningSpeed;
         rudderSlider.maxValue = ship.maxTurningSpeed;
@@ -107,7 +107,7 @@ public class UiManager : MonoBehaviour
    private IEnumerator trackShipDetails() {
        while (trackingShip) {
             shipAttributesDisplay.text = string.Format("Health: {0}\nSpeed: {1}", 
-                lastSelectedShip.getHitPoints(), lastSelectedShip.getCurrentSpeed());
+                lastSelectedShip.GetHitPoints(), lastSelectedShip.GetCurrentSpeed());
             lastSelectedShip.setTurningSpeed(rudderSlider.value);
             lastSelectedShip.setTargetSpeed(engineSlider.value);
             yield return shipUpdateCycle;
