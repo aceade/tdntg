@@ -39,6 +39,8 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
 
     private List<Weapon> weapons;
 
+    private Dictionary<IDamage, int> knownThreats = new Dictionary<IDamage, int>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +50,7 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
         defaultMaterial = GetComponentInChildren<Renderer>().material;
         weapons = new List<Weapon>(GetComponentsInChildren<Weapon>());
         weapons.ForEach(x => x.SetShip(this));
+        InvokeRepeating("AnalyseTargets", 1f, 1f);
     }
 
     // Update is called once per frame
@@ -66,6 +69,10 @@ public class Ship : MonoBehaviour, IDamage, IPointerClickHandler
             setTurningSpeed(0f);
         }
 
+    }
+
+    protected virtual void AnalyseTargets() {
+        // no-op for default
     }
 
     private bool shouldStraighten() {
